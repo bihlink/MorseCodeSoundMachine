@@ -7,6 +7,7 @@
   <option value="18">Novice</option>
   <option value="20:18">Medium</option>
   <option value="20">Advanced</option>
+  <option value="50">Expert</option>
 </select></p>
 <p><input type="range" id="frequency" name="frequency" min="440" max="1100" step="10" value="800"><label id="frequency_label">800</label></p>
 <p><span id="playedtext"></span></p>
@@ -43,10 +44,14 @@ document.getElementById('playLetter').addEventListener('click', () => {
   MorseCodePlayer.playMorseElements('.-.');
 });
 
+function PlayText (pText) {
+  MorseCodePlayer.playTextAsMorse(pText, false);
+}
 
 function ShowCharacter (pChar) {
 //console.log ('character', pChar);
-document.getElementById('playedtext').innerHTML = document.getElementById('playedtext').innerHTML + pChar;
+let lScript = '"PlayText(\'' + pChar + '\');"';
+document.getElementById('playedtext').innerHTML = document.getElementById('playedtext').innerHTML + '<span onclick=' + lScript + '>' + pChar + '</span>';
 }
 
 function ShowKey (pState) {
@@ -60,6 +65,8 @@ document.getElementById('playtext').addEventListener('click', () => {
     document.getElementById('playedtext').innerHTML = '';
   }
   MorseCodePlayer.frequency = document.getElementById('frequency').value;
+  
+  MorseCodePlayer.setSpeedString (document.getElementById('speed').value);
   
   MorseCodePlayer.onCharStartCallback = ShowCharacter;
   MorseCodePlayer.onPlayCallback = ShowKey;  
@@ -86,6 +93,12 @@ document.getElementById('frequency').addEventListener('dblclick', () => {
   document.getElementById('frequency_label').innerHTML = 800;
   MorseCodePlayer.frequency = 800;
 });
+
+
+document.getElementById('speed').addEventListener('change', () => {
+   MorseCodePlayer.setSpeedString (document.getElementById('speed').value);
+});
+
 
 </script>
 

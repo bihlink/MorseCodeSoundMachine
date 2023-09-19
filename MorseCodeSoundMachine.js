@@ -7,7 +7,7 @@
 * by Pedja Supurovic, YT9TP
 * https://pedja.supurovic.net
 *
-* Version 0.5
+* Version 0.6
 *
 */
 
@@ -118,29 +118,31 @@ class MorseCodeSoundMachine {
       this._overallSpeed = this.charSpeed;
     }
   }
-  
-  
-  get dotTime() {
-    return this._dotTime;
-  };
 
-  get dashTime() {
-    return this._dashTime;
-  };
-  
-  get symbolSpacerTime() {
-    return this._symbolSpacerTime;
-  };
-  
-  get charSpacerTime() {
-    return this._charSpacerTime;
-  };
-
-  get wordSpacerTime() {
-    return this._wordSpacerTime;
-  };
-
-  
+  setSpeedString (pSpeed) {
+    
+    let lCharSpeed;
+    let lOverallSpeed;
+    
+    let lSpeedArray;
+    
+    lSpeedArray = pSpeed.split(":");
+    if(typeof lSpeedArray[0] !== 'undefined') {
+      lCharSpeed = Number(lSpeedArray[0]);
+      
+      if(typeof lSpeedArray[1] !== 'undefined') {
+        lOverallSpeed = Number(lSpeedArray[1]);
+      } else {
+        lOverallSpeed = lCharSpeed;
+      }
+      this.setSpeed (lCharSpeed, lOverallSpeed);
+      
+    } else {
+      throw new Error('Invalid speed parameter!');
+    }
+    
+  }
+ 
   setSpeed (pCharSpeed, pOverallSpeed) {
     this.charSpeed = pCharSpeed;
     this.overallSpeed = pOverallSpeed;
@@ -163,7 +165,29 @@ class MorseCodeSoundMachine {
       this._wordSpacerTime = (7 * lCharacterDelay) / 19;
     }
     
-  } // setPlayerSpeed
+  } // setPlayerSpeed  
+  
+  get dotTime() {
+    return this._dotTime;
+  };
+
+  get dashTime() {
+    return this._dashTime;
+  };
+  
+  get symbolSpacerTime() {
+    return this._symbolSpacerTime;
+  };
+  
+  get charSpacerTime() {
+    return this._charSpacerTime;
+  };
+
+  get wordSpacerTime() {
+    return this._wordSpacerTime;
+  };
+
+ 
   
 
   get note_context() {
@@ -314,7 +338,7 @@ class MorseCodeSoundMachine {
     return lResult;
   }
   
-   async playTextAsMorse (pText) {
+   async playTextAsMorse (pText, pDoStartStopCallback = true) {
      
     this.setPlayStatusOn(); 
      
@@ -331,13 +355,13 @@ class MorseCodeSoundMachine {
         } else {
           let lCharMorse = this.convertCharToMorseElements(lChar);
   //console.debug (lChar, lCharMorse);
-          if (typeof this._onCharStartCallback !== "undefined") {
+          if (pDoStartStopCallback && (typeof this._onCharStartCallback !== "undefined")) {
             this._onCharStartCallback(lChar);
           }
           //lMorseLine = lMorseLine + lCharMorse;
           await this.playMorseElements(lCharMorse);
           
-          if (typeof this._onCharEndCallback !== "undefined") {
+          if (pDoStartStopCallback && (typeof this._onCharEndCallback !== "undefined")) {
             this._onCharEndCallback(lChar);
           }
           
