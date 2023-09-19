@@ -1,7 +1,7 @@
 <p><button id="playNote">Start Note</button><button id="stopNote">Stop Note</button></p>
 <p><button id="playDot">Play dot</button><button id="playDash">Play dash</button></p>
 <p><button id="playLetter">Play &ldquo;r&rdquo; in Morse code</button></p>
-<p><input id="texttoplay" value="TEST"></input><button id="playtext">Play</button></p>
+<p><input id="texttoplay" value="TEST"></input><button id="playtext">Play</button><button id="stopplaytext">Stop</button></p>
 <p><label>Speed:</label><select name="speed" id="speed">
   <option value="18:12">First Timer</option>
   <option value="18">Novice</option>
@@ -56,7 +56,9 @@ console.log ('key', pState);
 
 
 document.getElementById('playtext').addEventListener('click', () => {
-  document.getElementById('playedtext').innerHTML = '';
+  if (MorseCodePlayer.playStatus == false) {
+    document.getElementById('playedtext').innerHTML = '';
+  }
   MorseCodePlayer.frequency = document.getElementById('frequency').value;
   
   MorseCodePlayer.onCharStartCallback = ShowCharacter;
@@ -64,6 +66,11 @@ document.getElementById('playtext').addEventListener('click', () => {
   
   MorseCodePlayer.playTextAsMorse(document.getElementById('texttoplay').value);
 });
+
+document.getElementById('stopplaytext').addEventListener('click', () => {
+  MorseCodePlayer.stopPlay();
+});
+
 
 document.getElementById('frequency').addEventListener('click', () => {
   document.getElementById('frequency_label').innerHTML = document.getElementById('frequency').value;
