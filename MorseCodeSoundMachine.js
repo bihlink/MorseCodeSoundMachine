@@ -8,87 +8,112 @@
 * https://pedja.supurovic.net
 *
 *
+*
+* Sample usage:
+*
+*  var MorseCodePlayer = new MorseCodeSoundMachine(INITIAL_FREQUENCY, INITIAL_CHAR_SPEED, INITIAL_OVERALL_SPEED);
+*  
+*  MorseCodePlayer.frequency = 800;
+*  
+*  MorseCodePlayer.setSpeedString ("18:12");
+*  //or 
+*  //MorseCodePlayer.setSpeed (18, 12);
+*  
+*  MorseCodePlayer.playTextAsMorse('TEST');
+*
+*
 */
-const MORSE_CODE_SOUND_MACHINE_VERSION = "1.0";
+
+
+
+const MORSE_CODE_SOUND_MACHINE_VERSION = "v1.2";
 
 const INITIAL_FREQUENCY = 800; // Hz
 const INITIAL_CHAR_SPEED = 20; // Words Per Minute
 const INITIAL_OVERALL_SPEED = 12; // Words Per Minute
 
-  const CHAR_TO_MORSECODE_MAP = {
-    'A': '.-',
-    'B': '-...',
-    'C': '-.-.',
-    'D': '-..',
-    'E': '.',
-    'F': '..-.',
-    'G': '--.',
-    'H': '....',
-    'I': '..',
-    'J': '.---',
-    'K': '-.-',
-    'L': '.-..',
-    'M': '--',
-    'N': '-.',
-    'O': '---',
-    'P': '.--.',
-    'Q': '--.-',
-    'R': '.-.',
-    'S': '...',
-    'T': '-',
-    'U': '..-',
-    'V': '...-',
-    'W': '.--',
-    'X': '-..-',
-    'Y': '-.--',
-    'Z': '--..',
-    '1': '.----',
-    '2': '..---',
-    '3': '...--',
-    '4': '....-',
-    '5': '.....',
-    '6': '-....',
-    '7': '--...',
-    '8': '---..',
-    '9': '----.',
-    '0': '-----',
-    '?': '..--..',
-    '=': '-...-',
-    '.': '.-.-.-',
-    ',': '--..--',
-    '!': '..--.',
-    ':': '---...',
-    '"': '.-..-.',
-    "'": '.----.',
-    '@': '.--.-.',
-    '&': '.-...',
-    '+': '.-.-.',
-    ';': '-.-.-',
-    '/': '--..-.',
-    '-': '-....-',
-    '(': '-.--.',
-    ')': '-.--.-',
-    '_': '..--.-',
-    '0': '-----',
-    '0': '-----',
-    '0': '-----',
-    
-  };  
+// Mapping table for Morse Code 
+const CHAR_TO_MORSECODE_MAP = {
+  'A': '.-',
+  'B': '-...',
+  'C': '-.-.',
+  'D': '-..',
+  'E': '.',
+  'F': '..-.',
+  'G': '--.',
+  'H': '....',
+  'I': '..',
+  'J': '.---',
+  'K': '-.-',
+  'L': '.-..',
+  'M': '--',
+  'N': '-.',
+  'O': '---',
+  'P': '.--.',
+  'Q': '--.-',
+  'R': '.-.',
+  'S': '...',
+  'T': '-',
+  'U': '..-',
+  'V': '...-',
+  'W': '.--',
+  'X': '-..-',
+  'Y': '-.--',
+  'Z': '--..',
+  '1': '.----',
+  '2': '..---',
+  '3': '...--',
+  '4': '....-',
+  '5': '.....',
+  '6': '-....',
+  '7': '--...',
+  '8': '---..',
+  '9': '----.',
+  '0': '-----',
+  '?': '..--..',
+  '=': '-...-',
+  '.': '.-.-.-',
+  ',': '--..--',
+  '!': '..--.',
+  ':': '---...',
+  '"': '.-..-.',
+  "'": '.----.',
+  '@': '.--.-.',
+  '&': '.-...',
+  '+': '.-.-.',
+  ';': '-.-.-',
+  '/': '--..-.',
+  '-': '-....-',
+  '(': '-.--.',
+  ')': '-.--.-',
+  '_': '..--.-'
+};  
+
 
 
 class MorseCodeSoundMachine {
-  
+
+
   constructor (pFrequency = 800, pCharSpeed = 18, pOverallSpeed = 18) {
     this.frequency = pFrequency;
     this.setSpeed (pCharSpeed, pOverallSpeed);
   }
-  
+
+  /*
+  *
+  * Get audio tone frequency (Hz)
+  *
+  */
   get frequency() {
     return this._frequency;
   }
   
+  /*
+  *
+  * Set audio tone frequency (Hz)
+  *
+  */
   set frequency(pValue) {
-//console.log (pValue, typeof pValue);
     if (typeof pValue !== 'number') {
       pValue = Number (pValue);
     }
@@ -97,19 +122,45 @@ class MorseCodeSoundMachine {
     }
     this._frequency = pValue;
   }
-  
+
+  /*
+  *
+  * Get Morse Code speed for single character (WPM). 
+  * If Farnsworth Timing is not used this also means overall text speed.
+  *
+  */
   get charSpeed() {
     return this._charSpeed;
   }
   
+  /*
+  *
+  * Set Morse Code speed (WPM). This sets character speed. 
+  * If Farnsworth Timing is not used this also sets overall text speed.
+  *
+  */
   set charSpeed(pValue) {
     this._charSpeed = pValue;
   }
 
+  /*
+  *
+  * Get Overall Morse Code speed (WPM). 
+  * If Farnsworth Timing is used this should be different from character speed (slower). 
+  * This means overal text speed will be slower than character speed.
+  *
+  */
   get overallSpeed() {
     return this._overallSpeed;
   }
   
+  /*
+  *
+  * Set Overall Morse Code speed (WPM). 
+  * If Farnsworth Timing is used this should be different from character speed (slower). 
+  * This means overal text speed will be slower than character speed.
+  *
+  */
   set overallSpeed(pValue) {
     if (pValue <= this.charSpeed) {
       this._overallSpeed = pValue;
@@ -118,6 +169,19 @@ class MorseCodeSoundMachine {
     }
   }
 
+  /*
+  *
+  * Set Morse Code emiting speed by specifying speed as string (WPM).
+  *
+  * String format is cc:oo where cc is character speed and oo is overall speed.
+  * If oo is omited in a string then oo speed will be the same as cc speed.
+  *
+  * Examples:
+  *   18:12
+  *   20:18
+  *   22
+  *
+  */
   setSpeedString (pSpeed) {
     
     let lCharSpeed;
@@ -141,7 +205,14 @@ class MorseCodeSoundMachine {
     }
     
   }
- 
+
+  /*
+  *  
+  * Set Morse Code speed by specifying numeric parameters.
+  * pCharSpeed - character speed (WPM)
+  * pOverallSpeed - overall text speed (WPM) used for Farnsoworth mode.
+  *
+  */
   setSpeed (pCharSpeed, pOverallSpeed) {
     this.charSpeed = pCharSpeed;
     this.overallSpeed = pOverallSpeed;
@@ -164,31 +235,54 @@ class MorseCodeSoundMachine {
       this._wordSpacerTime = (7 * lCharacterDelay) / 19;
     }
     
-  } // setPlayerSpeed  
+  } // setSpeed  
   
+  /*
+  *
+  * Get duration of short Morse code element in seconds
+  *
+  */
   get dotTime() {
     return this._dotTime;
   };
 
+  /*
+  *
+  * Get duration of long Morse code element in seconds
+  *
+  */
   get dashTime() {
     return this._dashTime;
   };
   
+  /*
+  *
+  * Get duration of spacing between Morse Code elements in seconds
+  *
+  */
   get symbolSpacerTime() {
     return this._symbolSpacerTime;
   };
-  
+
+  /*
+  *
+  * Get duration of spacing between Morse Code characters in seconds
+  *
+  */
   get charSpacerTime() {
     return this._charSpacerTime;
   };
 
+  /*
+  *
+  * Get duration of spacing between Morse Code words in seconds
+  *
+  */
   get wordSpacerTime() {
     return this._wordSpacerTime;
   };
 
  
-  
-
   get note_context() {
     return this._note_context;
   };
@@ -201,6 +295,7 @@ class MorseCodeSoundMachine {
     return this._gain_node;
   };
   
+
   get audioContextInitialized() {
     return this._audioContextInitialized;
   };
@@ -209,7 +304,11 @@ class MorseCodeSoundMachine {
     this._audioContextInitialized = pValue;
   };
   
-  
+  /*
+  *
+  * Playstatus shows if Morse Code Sound Machine is currently playing.
+  *
+  */
   set playStatus (pValue) {
     this._playStatus = (pValue == true);
   }
@@ -217,7 +316,13 @@ class MorseCodeSoundMachine {
   get playStatus () {
     return this._playStatus;
   }
-  
+
+  /*
+  *
+  * PlayStatus is set on when needed (when playing starts).
+  * Class user should not call this method.
+  *
+  */
   setPlayStatusOn() {
     if (this.playStatus != true) {
       this.playStatus = true;
@@ -225,25 +330,60 @@ class MorseCodeSoundMachine {
       throw new Error('Already playing!');
     }
   }
-  
+
+  /*
+  *
+  * PlayStatus is set off when needed (when playing is finished).
+  * Also, class user may call this method externaly to stop currently played Morse Code.
+  *
+  */
   setPlayStatusOff() {
     this.playStatus = false;
   }
   
   
+  /*
+  *
+  * Class user may assign function to onCharStartCallback.
+  * Function would be called each time new character is played in Morse Code.
+  * Parameter is characer played.
+  * May be used to display currently played character.
+  *
+  */
   set onCharStartCallback (pValue) {
     this._onCharStartCallback = pValue;
   }
-  
+
+  /*
+  *
+  * Class user may assign function to onCharEndCallback.
+  * Function would be called each time character playing is finished.
+  * Parameter is character played.
+  * May be used to display character that is currently finished playing.
+  *
+  */  
   set onCharEndCallback (pValue) {
     this._onCharEndCallback = pValue;
   }
-  
-  set onPlayCallback (pValue) {
+
+ /*
+  *
+  * Class user may assign function to onToneCallback.
+  * Function would be called each time tone playing changes.
+  * Parameter is status: true / tone is played, false - tone is not played.
+  * May be used to visualy show Morse code keying.
+  *
+  */  
+  set onToneCallback (pValue) {
     this._onPlayCallback = pValue;
   }
 
-  
+  /*
+  *
+  * Audio Context must be initaliyed on user triggered event. 
+  * This is handled internaly within class. User should not call this.
+  *
+  */
   initializeAudioContext(pForced) {
     if (typeof this._note_context == "undefined") {
       this._note_context = new AudioContext();
@@ -260,49 +400,80 @@ class MorseCodeSoundMachine {
       this.audioContextInitialized = true;
     }
   }
-  
-  startPlaying() {
+
+
+  /*
+  *
+  * Start playing tone. 
+  * This is handled internaly within class. User should not call this.
+  *
+  */
+  startTone() {
     this.initializeAudioContext();
     
     if (typeof this._onPlayCallback !== "undefined") {
       this._onPlayCallback(true);
     }    
     
-//console.debug("start playing", this.getTime());
-
     this.gain_node.gain.setTargetAtTime(0.1, 0, 0.001)
     
   }
 
-  stopPlaying() {
+  /*
+  *
+  * Stop playing tone. 
+  * This is handled internaly within class. User should not call this.
+  *
+  */
+  stopTone() {
     if (typeof this._onPlayCallback !== "undefined") {
       this._onPlayCallback(false);
     }     
     
-      this.initializeAudioContext();
-//console.debug("stop playing", this.getTime());
+    this.initializeAudioContext();
     this.gain_node.gain.setTargetAtTime(0, 0, 0.001)
   }
-  
+
+  /*
+  *
+  * Initiate delay which determines tone duration. 
+  * This is handled internaly within class. User should not call this.
+  *
+  */
   makeDelay (pTime) {
-//console.debug("pTime", pTime); 
     return new Promise(resolve => setTimeout(resolve, pTime));
   } 
-  
+
+  /*
+  *
+  * Play long Morse Code element
+  * This is handled internaly within class. User should not call this.
+  *
+  */
   async playDash() {
-    this.startPlaying();    
+    this.startTone();    
     await this.makeDelay(this.dashTime);
-    this.stopPlaying();
+    this.stopTone();
   }  
 
+  /*
+  *
+  * Play short Morse Code element
+  * This is handled internaly within class. User should not call this.
+  *
+  */
   async playDot() {
-  
-    this.startPlaying();
+    this.startTone();
     await this.makeDelay(this.dotTime);
-    this.stopPlaying();
+    this.stopTone();
   }    
 
-
+  /*
+  *
+  * Returns current tiem as formatted string. May be used to check timings. 
+  * Not needed for regular function.
+  *
+  */
   getTime() {
 
     const zeroPad = (num, places) => String(num).padStart(places, '0')
@@ -312,7 +483,13 @@ class MorseCodeSoundMachine {
     return time;
   } // getTime()
   
-  
+
+  /*
+  *
+  * Plays Morse Code elements represented as group of dots and dashes.
+  * Used internally. Should not be used by class user.
+  *
+  */
   async playMorseElements(pElements) {
     this.initializeAudioContext();
     for (let i = 0; i < pElements.length; i++) {
@@ -328,7 +505,12 @@ class MorseCodeSoundMachine {
   } // playMorseElements()
   
   
-  
+  /*
+  *
+  * Converts charactr to Morse Code elements. Example: R is converted to .-.
+  * Used internally. Should not be used by class user.
+  *
+  */
   convertCharToMorseElements(pChar) {
     let lResult = '';
     if(typeof CHAR_TO_MORSECODE_MAP[pChar] !== 'undefined') {
@@ -337,6 +519,12 @@ class MorseCodeSoundMachine {
     return lResult;
   }
   
+  /*
+  *
+  * Plays input text as Morse Code sound.
+  * This is main function. User shoudl call this to initiate playing sound.
+  *
+  */
    async playTextAsMorse (pText = '', pDoStartStopCallback = true) {
      
     this.setPlayStatusOn(); 
@@ -344,7 +532,6 @@ class MorseCodeSoundMachine {
     let lText = pText.toUpperCase();
     
     for (let i = 0; i < lText.length; i++) {
-//console.debug ('lWords', i, lWords[i]);       
 
       if (MorseCodePlayer.playStatus == true) {
     
@@ -359,11 +546,10 @@ class MorseCodeSoundMachine {
           }
         } else {
           let lCharMorse = this.convertCharToMorseElements(lChar);
-  //console.debug (lChar, lCharMorse);
           if (pDoStartStopCallback && (typeof this._onCharStartCallback !== "undefined")) {
             this._onCharStartCallback(lChar);
           }
-          //lMorseLine = lMorseLine + lCharMorse;
+
           await this.playMorseElements(lCharMorse);
           
           if (pDoStartStopCallback && (typeof this._onCharEndCallback !== "undefined")) {
@@ -382,12 +568,16 @@ class MorseCodeSoundMachine {
     this.setPlayStatusOff();
     
   } 
-  
+
+
+  /*
+  *
+  * Stop playing Morse Code.
+  * User should call this to stop playing sound, lliek when user clicks stop button.
+  *
+  */
   stopPlay() {
     this.setPlayStatusOff();
   }
   
 } // class MorseCodeMachine
-
-
-

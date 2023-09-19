@@ -49,7 +49,7 @@ document.getElementById('playtext').addEventListener('click', () => {
   MorseCodePlayer.setSpeedString (document.getElementById('speed').value);
   
   MorseCodePlayer.onCharStartCallback = ShowCharacter;
-  MorseCodePlayer.onPlayCallback = ShowKey;  
+  MorseCodePlayer.onToneCallback = ShowKey;  
   
   let lTextToPlay = document.getElementById('texttoplay').value;
   if (lTextToPlay == '') {
