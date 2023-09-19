@@ -1,7 +1,8 @@
-<p><button id="playNote">Start Note</button><button id="stopNote">Stop Note</button></p>
-<p><button id="playDot">Play dot</button><button id="playDash">Play dash</button></p>
-<p><button id="playLetter">Play &ldquo;r&rdquo; in Morse code</button></p>
-<p><input id="texttoplay" value="TEST"></input><button id="playtext">Play</button><button id="stopplaytext">Stop</button></p>
+<script src="MorseCodeSoundMachine.js"></script>
+<h1>Morse Code Sound Machine <script>document.write (MORSE_CODE_SOUND_MACHINE_VERSION);</script></h1>
+<p>Enter your name and learn how it sounds in Morse Code<br>
+(Hint: you can actualy enter any kind of text, but learning own name in Morse Code is cool)</p>
+<p><input id="texttoplay" value="" placeholder="ENTER YOUR NAME"></input><button id="playtext">Play</button><button id="stopplaytext">Stop</button></p>
 <p><label>Speed:</label><select name="speed" id="speed">
   <option value="18:12">First Timer</option>
   <option value="18">Novice</option>
@@ -10,39 +11,12 @@
   <option value="50">Expert</option>
 </select></p>
 <p><input type="range" id="frequency" name="frequency" min="440" max="1100" step="10" value="800"><label id="frequency_label">800</label></p>
-<p><span id="playedtext"></span></p>
+<h2><span id="keyindicator" style="display:inline-block;width:32px;border:solid 1px black;">&nbsp</span> <span id="playedtext"></span></h2>
+<span>(Click played characters to repeat them.)</span></p>
 
-<script src="MorseCodeSoundMachine.js"></script>
 <script>
 
 var MorseCodePlayer = new MorseCodeSoundMachine(INITIAL_FREQUENCY, INITIAL_CHAR_SPEED, INITIAL_OVERALL_SPEED);
-
-
-document.getElementById('playNote').addEventListener('click', () => {
-  MorseCodePlayer.startPlaying();
-});
-
-
-
-document.getElementById('stopNote').addEventListener('click', () => {
-  MorseCodePlayer.stopPlaying();
-});
-
-
-document.getElementById('playDot').addEventListener('click', () => {
-if (!MorseCodePlayer.audioContextInitialized) {
-      MorseCodePlayer.initializeAudioContext();
-    }  
-  MorseCodePlayer.playDot();
-});
-
-document.getElementById('playDash').addEventListener('click', () => {
-  MorseCodePlayer.playDash();
-});
-
-document.getElementById('playLetter').addEventListener('click', () => {
-  MorseCodePlayer.playMorseElements('.-.');
-});
 
 function PlayText (pText) {
   MorseCodePlayer.playTextAsMorse(pText, false);
@@ -51,12 +25,18 @@ function PlayText (pText) {
 function ShowCharacter (pChar) {
 //console.log ('character', pChar);
 let lScript = '"PlayText(\'' + pChar + '\');"';
-document.getElementById('playedtext').innerHTML = document.getElementById('playedtext').innerHTML + '<span onclick=' + lScript + '>' + pChar + '</span>';
+document.getElementById('playedtext').innerHTML = document.getElementById('playedtext').innerHTML + '<span style="cursor: pointer" onclick=' + lScript + '>' + pChar + '</span>';
 }
 
 function ShowKey (pState) {
 console.log ('key', pState);
   
+  let lStyle = 'display:inline-block;width:32px;border:solid 1px black;';
+  if (pState) {
+    document.getElementById('keyindicator').style = lStyle + "background-color: black";
+  } else {
+    document.getElementById('keyindicator').style = lStyle + "background-color: white";
+  }
 }
 
 
@@ -71,7 +51,12 @@ document.getElementById('playtext').addEventListener('click', () => {
   MorseCodePlayer.onCharStartCallback = ShowCharacter;
   MorseCodePlayer.onPlayCallback = ShowKey;  
   
-  MorseCodePlayer.playTextAsMorse(document.getElementById('texttoplay').value);
+  let lTextToPlay = document.getElementById('texttoplay').value;
+  if (lTextToPlay == '') {
+    lTextToPlay = "NAME PLEASE"
+  }
+  
+  MorseCodePlayer.playTextAsMorse(lTextToPlay);
 });
 
 document.getElementById('stopplaytext').addEventListener('click', () => {

@@ -7,10 +7,9 @@
 * by Pedja Supurovic, YT9TP
 * https://pedja.supurovic.net
 *
-* Version 0.6
 *
 */
-
+const MORSE_CODE_SOUND_MACHINE_VERSION = "1.0";
 
 const INITIAL_FREQUENCY = 800; // Hz
 const INITIAL_CHAR_SPEED = 20; // Words Per Minute
@@ -338,7 +337,7 @@ class MorseCodeSoundMachine {
     return lResult;
   }
   
-   async playTextAsMorse (pText, pDoStartStopCallback = true) {
+   async playTextAsMorse (pText = '', pDoStartStopCallback = true) {
      
     this.setPlayStatusOn(); 
      
@@ -352,6 +351,12 @@ class MorseCodeSoundMachine {
         let lChar = lText[i];
         if (lChar == ' ') {
           await this.makeDelay (this.wordSpacerTime);  
+          if (pDoStartStopCallback && (typeof this._onCharStartCallback !== "undefined")) {
+            this._onCharStartCallback(lChar);
+          }
+          if (pDoStartStopCallback && (typeof this._onCharEndCallback !== "undefined")) {
+            this._onCharEndCallback(lChar);
+          }
         } else {
           let lCharMorse = this.convertCharToMorseElements(lChar);
   //console.debug (lChar, lCharMorse);
