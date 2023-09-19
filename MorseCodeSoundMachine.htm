@@ -1,0 +1,86 @@
+<p><button id="playNote">Start Note</button><button id="stopNote">Stop Note</button></p>
+<p><button id="playDot">Play dot</button><button id="playDash">Play dash</button></p>
+<p><button id="playLetter">Play &ldquo;r&rdquo; in Morse code</button></p>
+<p><input id="texttoplay" value="TEST"></input><button id="playtext">Play</button></p>
+<p><label>Speed:</label><select name="speed" id="speed">
+  <option value="18:12">First Timer</option>
+  <option value="18">Novice</option>
+  <option value="20:18">Medium</option>
+  <option value="20">Advanced</option>
+</select></p>
+<p><input type="range" id="frequency" name="frequency" min="440" max="1100" step="10" value="800"><label id="frequency_label">800</label></p>
+<p><span id="playedtext"></span></p>
+
+<script src="MorseCodeSoundMachine.js"></script>
+<script>
+
+var MorseCodePlayer = new MorseCodeSoundMachine(INITIAL_FREQUENCY, INITIAL_CHAR_SPEED, INITIAL_OVERALL_SPEED);
+
+
+document.getElementById('playNote').addEventListener('click', () => {
+  MorseCodePlayer.startPlaying();
+});
+
+
+
+document.getElementById('stopNote').addEventListener('click', () => {
+  MorseCodePlayer.stopPlaying();
+});
+
+
+document.getElementById('playDot').addEventListener('click', () => {
+if (!MorseCodePlayer.audioContextInitialized) {
+      MorseCodePlayer.initializeAudioContext();
+    }  
+  MorseCodePlayer.playDot();
+});
+
+document.getElementById('playDash').addEventListener('click', () => {
+  MorseCodePlayer.playDash();
+});
+
+document.getElementById('playLetter').addEventListener('click', () => {
+  MorseCodePlayer.playMorseElements('.-.');
+});
+
+
+function ShowCharacter (pChar) {
+//console.log ('character', pChar);
+document.getElementById('playedtext').innerHTML = document.getElementById('playedtext').innerHTML + pChar;
+}
+
+function ShowKey (pState) {
+console.log ('key', pState);
+  
+}
+
+
+document.getElementById('playtext').addEventListener('click', () => {
+  document.getElementById('playedtext').innerHTML = '';
+  MorseCodePlayer.frequency = document.getElementById('frequency').value;
+  
+  MorseCodePlayer.onCharStartCallback = ShowCharacter;
+  MorseCodePlayer.onPlayCallback = ShowKey;  
+  
+  MorseCodePlayer.playTextAsMorse(document.getElementById('texttoplay').value);
+});
+
+document.getElementById('frequency').addEventListener('click', () => {
+  document.getElementById('frequency_label').innerHTML = document.getElementById('frequency').value;
+});
+
+document.getElementById('frequency').addEventListener('input', () => {
+  document.getElementById('frequency_label').innerHTML = document.getElementById('frequency').value;
+  MorseCodePlayer.frequency = document.getElementById('frequency').value;
+});
+
+document.getElementById('frequency').addEventListener('dblclick', () => {
+  document.getElementById('frequency').value = 800;
+  document.getElementById('frequency_label').innerHTML = 800;
+  MorseCodePlayer.frequency = 800;
+});
+
+</script>
+
+
+
