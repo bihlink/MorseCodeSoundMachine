@@ -4,7 +4,7 @@
 <h1>Morse Code Sound Machine <script>document.write (MORSE_CODE_SOUND_MACHINE_VERSION);</script></h1>
 <p>Enter your name and learn how it sounds in Morse Code<br>
 (Hint: you can actualy enter any kind of text, but learning own name in Morse Code is cool)</p>
-<p><input id="texttoplay" value="" placeholder="ENTER YOUR NAME" size="50"></input><button id="playtext">Play</button><button id="stopplaytext">Stop</button></p>
+<p><input id="texttoplay" value="" placeholder="ENTER YOUR NAME" size="50" style="text-transform: uppercase;"></input><button id="playtext">Play</button><button id="stopplaytext">Stop</button></p>
 <p><label>Speed:</label><select name="speed" id="speed">
   <option value="18:12">First Timer</option>
   <option value="18">Novice</option>
@@ -12,7 +12,7 @@
   <option value="20">Advanced</option>
   <option value="50">Expert</option>
 </select></p>
-<p><input type="range" id="frequency" name="frequency" min="440" max="1100" step="10" value="800"><label id="frequency_label">800</label></p>
+<p><input type="range" id="frequency" name="frequency" min="440" max="1100" step="10" value="800"><label id="frequency_label">800</label> Hz</p>
 <h2><span id="keyindicator" style="display:inline-block;width:32px;border:solid 1px black;">&nbsp</span> <span id="playedtext"></span></h2>
 <span>(Click played characters to repeat them.)</span></p>
 <p><img id="animation" src="morse-key-up.gif"></p>
@@ -45,7 +45,6 @@ function ShowKey (pState) {
     document.getElementById('animation').src = "morse-key-up.gif";
   }
 }
-
 
 document.getElementById('playtext').addEventListener('click', () => {
   if (MorseCodePlayer.playStatus == false) {
