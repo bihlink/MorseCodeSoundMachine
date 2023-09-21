@@ -26,7 +26,7 @@
 
 
 
-const MORSE_CODE_SOUND_MACHINE_VERSION = "v1.2";
+const MORSE_CODE_SOUND_MACHINE_VERSION = "v1.3";
 
 const INITIAL_FREQUENCY = 800; // Hz
 const INITIAL_CHAR_SPEED = 20; // Words Per Minute
