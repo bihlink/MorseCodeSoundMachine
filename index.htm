@@ -1,3 +1,5 @@
+<link rel="preload" href="morse-key-down.gif" as="image">
+<link rel="preload" href="morse-key-up.gif" as="image">
 <script src="MorseCodeSoundMachine.js"></script>
 <h1>Morse Code Sound Machine <script>document.write (MORSE_CODE_SOUND_MACHINE_VERSION);</script></h1>
 <p>Enter your name and learn how it sounds in Morse Code<br>
@@ -13,6 +15,7 @@
 <p><input type="range" id="frequency" name="frequency" min="440" max="1100" step="10" value="800"><label id="frequency_label">800</label></p>
 <h2><span id="keyindicator" style="display:inline-block;width:32px;border:solid 1px black;">&nbsp</span> <span id="playedtext"></span></h2>
 <span>(Click played characters to repeat them.)</span></p>
+<p><img id="animation" src="morse-key-up.gif"></p>
 <p>View source at: <a href="https://github.com/pedjas/MorseCodeSoundMachine" target="_blank">https://github.com/pedjas/MorseCodeSoundMachine</a>
 
 
@@ -31,13 +34,15 @@ document.getElementById('playedtext').innerHTML = document.getElementById('playe
 }
 
 function ShowKey (pState) {
-console.log ('key', pState);
+//console.log ('key', pState);
   
   let lStyle = 'display:inline-block;width:32px;border:solid 1px black;';
   if (pState) {
     document.getElementById('keyindicator').style = lStyle + "background-color: black";
+    document.getElementById('animation').src = "morse-key-down.gif";
   } else {
     document.getElementById('keyindicator').style = lStyle + "background-color: white";
+    document.getElementById('animation').src = "morse-key-up.gif";
   }
 }
 
