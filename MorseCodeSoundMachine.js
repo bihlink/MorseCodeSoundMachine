@@ -1,13 +1,10 @@
 /*
-*
 * Morse Code Sound Machine
 *
 * Class that converts text to Morse Code Audio
 *
-* by Pedja Supurovic, YT9TP
-* https://pedja.supurovic.net
-*
-*
+* by Abid (Ado) Nevesinjac E70NA & Pedja Supurovic, YT9TP
+* https://github.com/bihlink/MorseCodeSoundMachine
 *
 * Sample usage:
 *
@@ -20,8 +17,6 @@
 *  //MorseCodePlayer.setSpeed (18, 12);
 *  
 *  MorseCodePlayer.playTextAsMorse('TEST');
-*
-*
 */
 
 
